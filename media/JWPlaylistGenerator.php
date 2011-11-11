@@ -33,7 +33,7 @@ if (is_array ($playlist_items)) {
     $file = get_post_meta($playlist_item_id, LONGTAIL_KEY . "file", true);
     if (empty($thumbnail)) {
       $temp = get_post($image_id);
-      $image = $temp->guid;
+      $image = wp_get_attachment_url( $image_id );
     } else {
       $image = $thumbnail;
     }
@@ -45,12 +45,12 @@ if (is_array ($playlist_items)) {
       echo "\n\t\t\t".'<jwplayer:streamer>' . esc_attr($streamer) . '</jwplayer:streamer>';
       echo "\n\t\t\t".'<location>' . esc_attr($file) . '</location>';
     } else {
-      echo "\n\t\t\t".'<location>' . esc_attr($playlist_item->guid) . '</location>';
+      echo "\n\t\t\t".'<location>' . esc_attr( wp_get_attachment_url( $playlist_item_id) . '</location>';
     }
     if (substr($playlist_item->post_mime_type, 0, 5) == "image") {
       $duration = get_post_meta($playlist_item_id, LONGTAIL_KEY . "duration", true);
       echo "\n\t\t\t"."<jwplayer:duration>" . ($duration ? $duration : 10) . "</jwplayer:duration>";
-      echo "\n\t\t\t".'<image>' . esc_attr($playlist_item->guid) . '</image>';
+      echo "\n\t\t\t".'<image>' . esc_attr( wp_get_attachment_url( $playlist_item_id ) ) . '</image>';
     } else {
       echo "\n\t\t\t".'<image>' . esc_attr($image) . '</image>';
     }

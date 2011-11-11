@@ -194,7 +194,7 @@ function resolve_media_id(&$atts) {
       $image_id = get_post_meta($id, LONGTAIL_KEY . "thumbnail", true);
       if (isset($image_id)) {
         $image_attachment = get_post($image_id);
-        $atts["image"] = isset($image_attachment) ? $image_attachment->guid : "";
+        $atts["image"] = isset($image_attachment) ? wp_get_attachment_url( $image_id ) : "";
       }
     } else {
       $atts["image"] = $thumbnail;
@@ -204,7 +204,7 @@ function resolve_media_id(&$atts) {
   if ($mime_type == "image") {
     $duration = get_post_meta($id, LONGTAIL_KEY . "duration", true);
     $atts["duration"] = $duration ? $duration : 10;
-    $atts["image"] = $post->guid;
+    $atts["image"] = wp_get_attachment_url( $id );
   } else if ($mime_type == "audio") {
     if (empty($atts["image"]) && empty($atts["width"]) && empty($atts["height"])) {
       $atts["playerReady"] = "function(obj) { document.getElementById(obj['id']).parentNode.style.height = document.getElementById(obj['id']).getPluginConfig('controlbar')['height'] %2B 'px'; }";
@@ -217,7 +217,7 @@ function resolve_media_id(&$atts) {
     $atts["streamer"] = get_post_meta($id, LONGTAIL_KEY . "streamer", true);
     $atts["file"] = get_post_meta($id, LONGTAIL_KEY . "file", true);
   } else {
-    $atts["file"] = $post->guid;
+    $atts["file"] = wp_get_attachment_url( $id );
   }
   generateModeString($atts, $id);
 }
@@ -267,7 +267,7 @@ function generate_playlist($playlist_id) {
       $file = get_post_meta($playlist_item_id, LONGTAIL_KEY . "file", true);
       if (empty($thumbnail)) {
         $temp = get_post($image_id);
-        $image = isset($temp) ? $temp->guid : "";
+        $image = isset($temp) ? wp_get_attachment_url( $id ) : "";
       } else {
         $image = $thumbnail;
       }
@@ -277,12 +277,12 @@ function generate_playlist($playlist_id) {
         $p_item[] = "\"streamer\": \"" . esc_attr($streamer) . "\"";
         $p_item[] = "\"file\": \"" . esc_attr($file) . "\"";
       } else {
-        $p_item[] = "\"file\": \"" . esc_attr($playlist_item->guid) . "\"";
+        $p_item[] = "\"file\": \"" . esc_attr( wp_get_attachment_url( $playlist_item_id ) ) . "\"";
       }
       $duration = get_post_meta($playlist_item_id, LONGTAIL_KEY . "duration", true);
       if ($duration) $p_item[] = "\"duration\": \"" . $duration . "\"";
       if (substr($playlist_item->post_mime_type, 0, 5) == "image") {
-        $p_item[] = "\"image\": \"" . esc_attr($playlist_item->guid) . "\"";
+        $p_item[] = "\"image\": \"" . esc_attr( wp_get_attachment_url( $playlist_item_id ) ) . "\"";
       } else {
         $p_item[] = "\"image\": \"" . esc_attr($image) . "\"";
       }
@@ -304,7 +304,7 @@ function generateModeString(&$atts, $id = null) {
     $html5_id = get_post_meta($id, LONGTAIL_KEY . "html5_file_selector", true);
     if (isset($html5_id) && $html5_id > -1) {
       $html5_attachment = get_post($html5_id);
-      $html5 = $html5_attachment->guid;
+      $html5 = wp_get_attachment_url( $html5_id );
     }
   }
   $download = array_key_exists("download_file", $atts) ? $atts["download_file"] : null;
@@ -315,7 +315,7 @@ function generateModeString(&$atts, $id = null) {
     $download_id = get_post_meta($id, LONGTAIL_KEY . "download_file_selector", true);
     if (isset($download_id) && $download_id > -1) {
       $download_attachment = get_post($download_id);
-      $download = $download_attachment->guid;
+      $download = wp_get_attachment_url( $download_id );
     }
   }
   if (!empty($html5) || !empty($download)) {

@@ -27,10 +27,10 @@ function jwplayer_wp_head() {
       $image_id = get_post_meta($meta_header_id, LONGTAIL_KEY . "thumbnail", true);
       if (isset($image_id)) {
         $image_attachment = get_post($image_id);
-        $thumbnail = !empty($image_attachment) ? $image_attachment->guid : "";
+        $thumbnail = !empty($image_attachment) ? wp_get_attachment_url( $image_id ) : "";
       }
     }
-    $settings[] = "file=" . $attachment->guid;
+    $settings[] = "file=" . wp_get_attachment_url( $meta_header_id );
   } else {
     $title = $post->post_title;
     $description = $post->post_excerpt;
@@ -234,12 +234,12 @@ function generateImageSelectorHTML($id, $attachments) {
         } else {
           $selected = "";
         }
-        $output .= "<option value='" . $post->ID . "' title='" . $post->guid . "' " . $selected . ">" . $post->post_title . "</option>\n";
+        $output .= "<option value='" . $post->ID . "' title='" . wp_get_attachment_url( $post->ID ) . "' " . $selected . ">" . $post->post_title . "</option>\n";
       }
     }
     if (!$sel && isset($image_post) && isset($image_id) && $image_id != -1 && isset($thumbnail_url) && !$thumbnail_url) {
       $image_post = get_post($image_id);
-      $output .= "<option value='" . $image_post->ID . "' title='" . $image_post->guid . "' selected=selected >" . $image_post->post_title . "</option>\n";
+      $output .= "<option value='" . $image_post->ID . "' title='" . wp_get_attachment_url( $image_id ) . "' selected=selected >" . $image_post->post_title . "</option>\n";
     }
     $output .= "</select>\n";
   }
@@ -269,16 +269,16 @@ function generateVideoSelectorHTML($id, $field, $attachments) {
           $thumbnail_id = get_post_meta($id, LONGTAIL_KEY . "thumbnail", true);
           if (isset($thumbnail_id)) {
             $image_attachment = get_post($thumbnail_id);
-            $thumbnail = isset($image_attachment) ? $image_attachment->guid : "";
+            $thumbnail = isset($image_attachment) ? wp_get_attachment_url( $thumbnail_id ) : "";
           }
         }
-        $title = $post->post_title ? $post->post_title : $post->guid;
+        $title = $post->post_title ? $post->post_title : wp_get_attachment_url( $post->ID );
         $output .= "<option value='" . $post->ID . "' title='" . $thumbnail . "' " . $selected . ">" . $title . "</option>\n";
       }
     }
     if (!$sel && $video_id != -1 && !empty($video_id)) {
       $video_post = get_post($video_id);
-      $output .= "<option value='" . $video_post->ID . "' title='" . $video_post->guid . "' selected=selected >" . $video_post->post_title . "</option>\n";
+      $output .= "<option value='" . $video_post->ID . "' title='" . wp_get_attachment_url( $video_id ) . "' selected=selected >" . $video_post->post_title . "</option>\n";
     }
     $output .= "</select>\n";
   }
